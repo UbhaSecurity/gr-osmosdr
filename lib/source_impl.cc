@@ -439,6 +439,13 @@ source_impl::source_impl( const std::string &args )
       connect(throttle, 0, self(), channel++);
   }
 #endif
+
+  /* Populate the _gain and _gain_mode arrays with the hardware state */
+  BOOST_FOREACH( source_iface *dev, _devs )
+    for (size_t dev_chan = 0; dev_chan < dev->get_num_channels(); dev_chan++) {
+      _gain_mode[dev_chan] = dev->get_gain_mode(dev_chan);
+      _gain[dev_chan] = dev->get_gain(dev_chan);
+    }
 }
 
 size_t source_impl::get_num_channels()
